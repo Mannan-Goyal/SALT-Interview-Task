@@ -1,3 +1,6 @@
 import envHandler from './lib/env';
 
-export const port: string = envHandler('PORT');
+const port: string = envHandler('PORT');
+const mongo: string = envHandler('MONGO');
+
+export { port, mongo };
