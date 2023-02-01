@@ -11,6 +11,7 @@ mongoose.connect(mongo, (err) => {
   console.log('📙[server]: Database successfully connected!');
 });
 
+app.use(express.json());
 app.use('/user', userRouter);
 
 app.get('/', (req: Request, res: Response) => {
