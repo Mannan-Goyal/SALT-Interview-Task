@@ -20,6 +20,7 @@ const signUp = async (req: Request, res: Response) => {
       username,
     });
     const token = jwt.sign({ email, id: data._id }, jwtSecret);
+    console.log(token);
     res.status(201).json({ user: data, token });
   } catch (error) {
     console.log(error);
@@ -30,7 +31,7 @@ const signUp = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const user: HydratedDocument<IUser> = await User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ msg: 'User does not exist.' });
     const matchPassword = await bcrypt.compare(password, user.password);
     if (!matchPassword) return res.status(400).json({ msg: 'Invalid Credentials' });
@@ -75,10 +76,10 @@ const googleOauthHandler = async (req: Request, res: Response) => {
     console.log(data);
     const token = jwt.sign({ email: googleUser.email, id: data._id }, jwtSecret);
     res.cookie('jwtToken', token);
-    res.redirect(`http://localhost:3000?token=${token}`);
+    res.redirect(`http://localhost:5000?token=${token}`);
   } catch (error) {
     console.log(error, 'Failed to authorize google user');
-    return res.redirect('http://localhost:3000');
+    return res.redirect('http://localhost:5000');
   }
 };
 
