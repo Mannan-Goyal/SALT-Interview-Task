@@ -4,7 +4,7 @@ import cors from 'cors';
 import { port, mongo } from './config';
 import userRouter from './routers/userRouter';
 import { auth } from './middlewares/auth';
-
+import { googleOauthHandler } from './controllers/userController';
 const app: Express = express();
 
 mongoose.set('strictQuery', true);
@@ -16,6 +16,8 @@ mongoose.connect(mongo, (err) => {
 app.use(cors());
 app.use(express.json());
 app.use('/user', userRouter);
+
+app.get('/api/sessions/oauth/google', googleOauthHandler);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({ msg: 'Intervew Task for SALT' });
