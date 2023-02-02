@@ -1,5 +1,6 @@
 import express, { type Express, type Request, type Response } from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import { port, mongo } from './config';
 import userRouter from './routers/userRouter';
 import { auth } from './middlewares/auth';
@@ -12,6 +13,7 @@ mongoose.connect(mongo, (err) => {
   console.log('📙[server]: Database successfully connected!');
 });
 
+app.use(cors());
 app.use(express.json());
 app.use('/user', userRouter);
 

@@ -1,8 +1,10 @@
 import { type Request, type Response } from 'express';
+import { HydratedDocument } from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import { jwtSecret } from '../config';
+import { IUser } from '../types';
 
 const signUp = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
@@ -26,11 +28,10 @@ const signUp = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user: HydratedDocument<IUser> = await User.findOne({ email });
     if (!user) return res.status(404).json({ msg: 'User does not exist.' });
     const matchPassword = await bcrypt.compare(password, user.password);
     if (!matchPassword) return res.status(400).json({ msg: 'Invalid Credentials' });
-
     const token = jwt.sign({ email, id: user._id }, jwtSecret);
     res.status(201).json({ user, token });
   } catch (error) {
